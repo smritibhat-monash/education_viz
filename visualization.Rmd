@@ -1,0 +1,96 @@
+---
+title: "Education Trends"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    theme: bootstrap
+    orientation: columns
+    vertical_layout: scroll
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(flexdashboard)
+library(shiny)
+library(ggplot2)
+library(waffle)
+library(hrbrthemes)
+```
+
+
+
+Home{.tabset}
+======================
+
+
+
+### Relationship Between School Expenditure, Teachers and Education
+
+
+Compensation{.tabset}
+======================
+
+Inputs {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r}
+viz1 <- read_csv("data/viz1.csv")
+selectInput("drop1", "Level of Education", 
+    unique(viz1$`Level of education`))
+```
+
+Column
+-----------------------------------------------------------------------
+
+```{r}
+
+selectedData <- reactive({
+  viz1 %>%
+    filter(`Level of education`==input$drop1)
+})
+
+renderPlot({
+  viz <- selectedData() %>%
+    mutate(comp = paste0(round(staff_comp, 1), "%"))
+  ggplot(viz, aes(x = Year, y = staff_comp)) +
+    geom_line() +
+    geom_label(aes(label = comp)) +
+    theme_void()
+})
+
+
+
+renderPlot({
+  viz1 <- selectedData() %>%
+    mutate(Year = as.factor(Year)) %>%
+    mutate(Teacher = round(Teacher/1000))
+  viz1 %>%
+    count(Year, wt = Teacher) %>%
+    ggplot(aes(fill = Year, values = n)) +
+    geom_waffle(
+      n_rows = 6, color = "white", show.legend = FALSE, flip = TRUE) +
+    facet_wrap(~Year, ncol = 6) +
+    theme(panel.spacing.x = unit(0, "npc"),
+          panel.background = NULL,
+          axis.ticks.length = unit(0, "npc"),
+          panel.grid = element_line(colour = "white")) +
+    coord_equal() +
+    theme_enhance_waffle() +
+    theme_void()
+  
+})
+
+```
+
+
+
+
+
+
+
+
+
+
