@@ -66,7 +66,8 @@ renderPlot({
 renderPlot({
   viz1 <- selectedData() %>%
     mutate(Year = as.factor(Year)) %>%
-    mutate(Teacher = round(Teacher/1000))
+    mutate(Teacher = round(Teacher/1000)) %>%
+    mutate(comp = paste0(round(staff_comp, 1), "%"))
   viz1 %>%
     count(Year, wt = Teacher) %>%
     ggplot(aes(fill = Year, values = n)) +
@@ -77,7 +78,6 @@ renderPlot({
           panel.background = NULL,
           axis.ticks.length = unit(0, "npc"),
           panel.grid = element_line(colour = "white")) +
-    coord_equal() +
     theme_enhance_waffle() +
     theme_void()
   
