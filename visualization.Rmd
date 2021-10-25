@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     theme: bootstrap
     orientation: columns
-    vertical_layout: scroll
+    vertical_layout: fill
 always_allow_html: yes
 ---
 
@@ -18,6 +18,7 @@ library(ggplot2)
 library(waffle)
 library(hrbrthemes)
 library(r2d3)
+library(networkD3)
 ```
 
 
@@ -59,7 +60,8 @@ renderPlot({
     mutate(comp = paste0(round(staff_comp, 1), "%"))
   ggplot(viz, aes(x = Year, y = staff_comp)) +
     geom_line() +
-    geom_label(aes(label = comp)) +
+    geom_label(aes(label = comp, fill = as.factor(Year)),
+               show.legend = FALSE) +
     theme_void()
 })
 
@@ -91,6 +93,12 @@ renderPlot({
 Enrollment
 ======================
 
+Inputs {.sidebar}
+-----------------------------------------------------------------------
+
+
+
+
 Column {.tabset}
 -------------------------------------
 
@@ -103,7 +111,7 @@ renderUI({
       tags$iframe(seamless="seamless", 
                   src= "tmpuser/viz2_2014.html",
                   width=1200, 
-                  height=500)
+                  height=800)
      })
 ```
 
@@ -117,7 +125,7 @@ renderUI({
       tags$iframe(seamless="seamless", 
                   src= "tmpuser/viz2_2015.html",
                   width=1200, 
-                  height=500)
+                  height=800)
      })
 ```
 
@@ -131,7 +139,7 @@ renderUI({
       tags$iframe(seamless="seamless", 
                   src= "tmpuser/viz2_2016.html",
                   width=1200, 
-                  height=500)
+                  height=800)
      })
 ```
 
@@ -144,7 +152,7 @@ renderUI({
       tags$iframe(seamless="seamless", 
                   src= "tmpuser/viz2_2017.html",
                   width=1200, 
-                  height=500)
+                  height=800)
      })
 ```
 
@@ -158,6 +166,54 @@ renderUI({
       tags$iframe(seamless="seamless", 
                   src= "tmpuser/viz2_2018.html",
                   width=1200, 
-                  height=500)
+                  height=800)
      })
 ```
+
+Teacher:Student Ratio
+======================
+
+Inputs {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+viz3 <- read_csv("data/viz3.csv")
+selectInput("drop3", "Year", 
+    unique(viz3$Year))
+
+```
+
+
+Column {.tabset}
+-------------------------------------
+
+```{r}
+
+selectedData2 <- reactive({
+  viz3 %>%
+    filter(Year == as.numeric(input$drop3))
+})
+
+renderSankeyNetwork({
+  Nodes <- data.frame(numbers = c("H", "UM", "LM", "L",
+                                  unique(selectedData2()$Country)))
+  my_color <- 'd3.scaleOrdinal()
+  .domain(["H", "UM","LM", "L"])
+  .range(["#D98C00", "#D4ECDD" , "#A7C5EB", "#E9896A"])'
+  links <- selectedData2() %>%
+    select(income, Country, student_to_1_teacher) %>%
+    mutate(source = recode(income, H = 0, UM = 1, LM = 2, L = 3)) %>%
+    rowwise() %>%
+    mutate(Country = which(Nodes == Country)-1) %>%
+    distinct(Country, .keep_all = TRUE)
+  
+  check <- sankeyNetwork(Links = links, Nodes = Nodes, Source = "source",
+              Target = "Country", Value = "student_to_1_teacher",
+              NodeID = "numbers", units = " students", fontSize = 15, nodeWidth = 25,
+              LinkGroup = "income", colourScale=my_color)
+  check
+})
+  
+```
+
+

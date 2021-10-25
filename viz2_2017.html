@@ -17,14 +17,15 @@
         .attr("width", width)
         .attr("height", height);
 
-        var x = d3.scaleOrdinal()
+    var x = d3.scaleOrdinal()
         .domain(["L", "LM", "UM", "H"])
-        .range([50, 200, 340, 450])
+        .range([50, 200, 340, 550])
 
-    var color = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"]);
+        var color = d3.scaleOrdinal(["#A09F57", "#852747", "#4A403A"])
+        .domain(["Improving", "Worsening", "Stagnant"])
 
     var simulation = d3.forceSimulation()
-        .force("forceX", d3.forceX().strength(.09).x( function(d){ return x(d.income) } ))
+        .force("forceX", d3.forceX().strength(.1).x( function(d){ return x(d.income) } ))
         .force("forceY", d3.forceY().strength(.1).y(height * .5))
         .force("center", d3.forceCenter().x(width * .5).y(height * .5))
         .force("charge", d3.forceManyBody().strength(-15));
@@ -64,13 +65,39 @@
           .attr("fill", function(d) { return color(d.status); })
           .attr("cx", function(d){ return d.x; })
           .attr("cy", function(d){ return d.y; })
-          .on("mouseover", function(d){tooltip.text(d.Country + " is " + d.status); return tooltip.style("visibility", "visible");})
+          .on("mouseover", function(d){tooltip
+            .html(d.Country + " is " + d.status + "<br />income group: " + d.income);
+            return tooltip.style("visibility", "visible");})          
           .on("mousemove", function(d){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
           .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
           .call(d3.drag()
               .on("start", dragstarted)
               .on("drag", dragged)
               .on("end", dragended));
+
+        svg.append("text")
+           .attr("x", 100)
+           .attr("y", 100)
+           .style("text-anchor", "middle")
+           .text("Low");
+
+        svg.append("text")
+           .attr("x", 350)
+           .attr("y", 100)
+           .style("text-anchor", "middle")
+           .text("Lower Middle");
+
+        svg.append("text")
+           .attr("x", 600)
+           .attr("y", 100)
+           .style("text-anchor", "middle")
+           .text("Upper Middle");
+
+        svg.append("text")
+           .attr("x", 900)
+           .attr("y", 100)
+           .style("text-anchor", "middle")
+           .text("High");
             });
 
     function dragstarted(d) {
