@@ -17,11 +17,12 @@ library(shiny)
 library(ggplot2)
 library(waffle)
 library(hrbrthemes)
+library(r2d3)
 ```
 
 
 
-Home{.tabset}
+Home {.tabset}
 ======================
 
 
@@ -29,7 +30,7 @@ Home{.tabset}
 ### Relationship Between School Expenditure, Teachers and Education
 
 
-Compensation{.tabset}
+Compensation {.tabset}
 ======================
 
 Inputs {.sidebar}
@@ -40,6 +41,7 @@ Inputs {.sidebar}
 viz1 <- read_csv("data/viz1.csv")
 selectInput("drop1", "Level of Education", 
     unique(viz1$`Level of education`))
+
 ```
 
 Column
@@ -86,11 +88,76 @@ renderPlot({
 ```
 
 
+Enrollment
+======================
+
+Column {.tabset}
+-------------------------------------
+
+### 2014
+
+```{r}
+addResourcePath("tmpuser", getwd())
+
+renderUI({
+      tags$iframe(seamless="seamless", 
+                  src= "tmpuser/viz2_2014.html",
+                  width=1200, 
+                  height=500)
+     })
+```
 
 
+### 2015
+
+```{r}
+addResourcePath("tmpuser", getwd())
+
+renderUI({
+      tags$iframe(seamless="seamless", 
+                  src= "tmpuser/viz2_2015.html",
+                  width=1200, 
+                  height=500)
+     })
+```
 
 
+### 2016
+
+```{r}
+addResourcePath("tmpuser", getwd())
+
+renderUI({
+      tags$iframe(seamless="seamless", 
+                  src= "tmpuser/viz2_2016.html",
+                  width=1200, 
+                  height=500)
+     })
+```
+
+### 2017
+
+```{r}
+addResourcePath("tmpuser", getwd())
+
+renderUI({
+      tags$iframe(seamless="seamless", 
+                  src= "tmpuser/viz2_2017.html",
+                  width=1200, 
+                  height=500)
+     })
+```
 
 
+### 2018
 
+```{r}
+addResourcePath("tmpuser", getwd())
 
+renderUI({
+      tags$iframe(seamless="seamless", 
+                  src= "tmpuser/viz2_2018.html",
+                  width=1200, 
+                  height=500)
+     })
+```
