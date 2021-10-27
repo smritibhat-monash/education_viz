@@ -1,0 +1,112 @@
+---
+title: "Relationship between School Expenditure, Teachers and Education"
+author: "Smriti Vinayak Bhat"
+subtitle: "Tutorial 7: Deep Mendha and Michael Niemann"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+#   Introduction
+
+The narrative visualization is based on 3 different components of education -
+
+-   Enrollment of Students
+-   Optimal Teacher:Student Ratio
+-   Compensation and Retention of Teachers
+
+This visualization was intended to allow for interactive understanding of how the situation is with each of these components. There is space for self exploration of data to allow for self realization.
+
+While in recent years many efforts have been made to improve the system of education, there is still space for efficiency while keeping practicality in mind. This is an important topic for policy makers and educators worldwide.
+
+##    Compensation and Retention of Teachers
+
+This part allows for people to understand how the percentage of school budget being used as compensation is possibly affecting number of teachers available in workforce. The pertinent points of findings are conveyed in the sidebar.
+
+### Points of interest
+
+-   The compensation of staff hasn't remained as much of a priority as before. **There is a sharp dip in 2019 with regards to percentage of budget allocated to compensation.**
+
+-   This dip is also being reflected in the average number of teachers in the workforce across countries for the years 2014-2019. There is a **sharp fall in the average number of teachers post 2017**.
+
+-   There is less percentage of the budget allocated when higher in levels of education. This **could be correlated with the probability that there are lesser students to teach in each level**. However it makes one doubt whether quality of education can be maintained by reducing spending. The **quality of teachers increases in importance with the education level but this need is not reflected within budgetary expenditure.**
+
+##    Enrollment of Students
+
+This part represents the changing enrollment rate of students in countries belonging to different income groups across years 2014-2018. It is equipped to visually represent what the overall situation looks like across the world for each year by changing dropdown value. The radius of circles correspond to enrollment rates of students.
+
+### Points of interest
+
+-   The higher number of large circles corresponding to income group seems to reflect that the **higher the income of the country, the higher is the percentage of children enrolled within schools**. This does seem obvious as schooling is costly and can be considered a privilege.
+
+-   However what is **surprising is that the percentage of children in schools has dipped in high income countries in 2018.** While the dip is not highly significant, this either reflects lack of data from high income countries or means that a certain portion is choosing not to attend schools at all or home schooling.
+
+##    Optimal Teacher:Student Ratio
+
+This part shows a Sankey Network interaction to show the number of students being taught by a single teacher on an average for some of the top countries of an income group. Each set of flow interactions are labeled by income group they belong to.
+
+### Points of interest
+
+-   The higher income countries have the lowest number of students being taken care of by a single teacher across most years.
+-   **The income level of the country is inversely proportional to the number of students for a teacher.**
+-   The key finding however is the **gap between the upper two levels and the lower two levels of income**. There is a stark contrast in quality of education.
+
+#   Design
+
+The visualization design process for this project was carried out with the help of the 5 design-sheet (FdS) approach.
+
+The FdS for this process are contained within the [Appendix].
+
+## Sheet 1
+
+This sheet consists of the sections -
+
+-   Ideas
+-   Filter
+-   Categorise
+-   Combine and Refine
+
+### Ideas
+
+A number of ideas were considered such as  - 
+
+1.   Pictogram
+2.   Line Plot
+3.   Sankey Diagram
+4.   Vector Map
+5.   Packed Bubble Map
+6.   Vector Map
+7.   Spiral Histogram
+
+### Filter
+
+The above ideas were filtered on the basis of - 
+
+-   Discriminability
+-   Accuracy
+-   Salience 
+-   Interactivity
+
+1.    Pictogram: This provides us with accuracy in comparison due to fill of large numbers.
+2.    Line Plot: This allows for quite a bit of discriminability as multiple points can be plotted without causing confusion.
+3.    Sankey Diagram: Allowed for continuity while grouping(Gesalt Laws).
+4.    Vector Map: It scores high on interactivity however low on discriminability and salience. It can encode large number of values but is difficult to analyse. So this idea is filtered out.
+5.    Packed Bubble Map: 
+
+
+#   Implementation
+
+#   User Guide
+
+#   Conclusion
+
+#   Bibliography
+
+#   Appendix
+

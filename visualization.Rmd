@@ -26,9 +26,48 @@ library(networkD3)
 Home {.tabset}
 ======================
 
-
+Column {data-width = 700}
+---------------------------
 
 ### Relationship Between School Expenditure, Teachers and Education
+
+Education is the cornerstone of progress and development. As the ages pass by it is increasingly vital for the young to gain education. People drop out due to many reasons ranging from funding to inept or insufficient teachers. While in recent years many efforts have been made to improve the system of education, I believe that there is still space for efficiency while keeping practicality in mind. I believe that this is an important topic for policy makers and educators worldwide.
+
+There are three corner stones of education - 
+
+-   Enrollment of Students
+-   Optimal Teacher:Student Ratio
+-   Compensation and Retention of Teachers
+
+
+Click through the tabs to explore the data for this through the years 2014-2018.
+
+<div>
+```{r, fig.width = 10, fig.height = 10}
+knitr::include_graphics("img/teacher.png")
+```
+</div>
+
+Column 
+---------------------------
+
+### Tips for Usage of App
+
+-   Use Drop downs to toggle values in graphs and explore data.
+-   Hovering over elements in tabs _Enrollment_ and _Teacher:Student Ratio_ might give you a pleasant surprise.
+-   Feel free to drag the circles in _Enrollment_ visualization to see them bounce back to their place in group. Just a small trick for your enjoyment. 
+-   In event of tabs in _Enrollment_ not loading, please refresh app to load.
+
+### Sources
+
+1.    [Unesco institute of statistics](http://data.uis.unesco.org/Index.aspx) data on education(2014-2019). This provides us with country-wise information about -
+
+    a.   Total number of children enrolled for each level of schooling
+    b.   Total number of children of the appropriate age at each level of schooling
+    c.   Staff compensation as a percentage of total expenditure in public institutions
+    d.   Number of teachers for each level of schooling
+
+2.    [The World by Income and Region](https://datatopics.worldbank.org/world-development-indicators/the-world-by-income-and-region.html) provides us with the income category of each country.
 
 
 Compensation {.tabset}
@@ -37,13 +76,20 @@ Compensation {.tabset}
 Inputs {.sidebar}
 -----------------------------------------------------------------------
 
-
 ```{r}
 viz1 <- read_csv("data/viz1.csv")
 selectInput("drop1", "Level of Education", 
     unique(viz1$`Level of education`))
 
 ```
+
+The line chart refers to percentage of budget allocated to compensating teachers. The pictogram is the total number of teachers. The year axis shows values by year. As you toggle past the years do pay attention to the following points of interest - 
+
+-   The compensation of staff hasn't remained as much of a priority as before. **There is a sharp dip in 2019 with regards to percentage of budget allocated to compensation.**
+
+-   This dip is also being reflected in the average number of teachers in the workforce across countries for the years 2014-2019. There is a **sharp fall in the average number of teachers post 2017**.
+
+-   There is less percentage of the budget allocated when higher in levels of education. This **could be correlated with the probability that there are lesser students to teach in each level**. However it makes one doubt whether quality of education can be maintained by reducing spending. The **quality of teachers increases in importance with the education level but this need is not reflected within budgetary expenditure.**
 
 Column
 -----------------------------------------------------------------------
@@ -89,86 +135,51 @@ renderPlot({
 
 ```
 
-
 Enrollment
 ======================
 
 Inputs {.sidebar}
 -----------------------------------------------------------------------
 
+```{r}
+viz2 <- read_csv("data/viz2.csv")
+selectInput("drop2", "Year", 
+    unique(viz2$Year))
 
+```
+
+Feel free to hover over the circles to understand what the situation of different countries belonging to the income group is. Radius of circles are directly proportional to enrollment rate. Changing dropdown option will provide situation across years 2014 - 2018:
+
+-   The higher number of large circles corresponding to income group seems to reflect that the **higher the income of the country, the higher is the percentage of children enrolled within schools**. This does seem obvious as schooling is costly and can be considered a privilege.
+
+-   However what is **surprising is that the percentage of children in schools has dipped in high income countries in 2018.** While the dip is not highly significant, this either reflects lack of data from high income countries or means that a certain portion is choosing not to attend schools at all or home schooling.
+
+**Fun Interactivity : Try dragging circles from one group to any space outside it or to another group and it will slowly make it's way back to where it belongs!**
+
+_If image does not load, please do refresh page_
 
 
 Column {.tabset}
 -------------------------------------
 
-### 2014
-
 ```{r}
 addResourcePath("tmpuser", getwd())
 
+selectedData3 <- reactive({
+  input$drop2
+})
+
+
 renderUI({
-      tags$iframe(seamless="seamless", 
-                  src= "tmpuser/viz2_2014.html",
+  source <- paste0("tmpuser/viz2_", selectedData3(),".html")
+  tags$iframe(seamless="seamless", 
+                  src= source,
                   width=1200, 
                   height=800)
+  
      })
 ```
 
-
-### 2015
-
-```{r}
-addResourcePath("tmpuser", getwd())
-
-renderUI({
-      tags$iframe(seamless="seamless", 
-                  src= "tmpuser/viz2_2015.html",
-                  width=1200, 
-                  height=800)
-     })
-```
-
-
-### 2016
-
-```{r}
-addResourcePath("tmpuser", getwd())
-
-renderUI({
-      tags$iframe(seamless="seamless", 
-                  src= "tmpuser/viz2_2016.html",
-                  width=1200, 
-                  height=800)
-     })
-```
-
-### 2017
-
-```{r}
-addResourcePath("tmpuser", getwd())
-
-renderUI({
-      tags$iframe(seamless="seamless", 
-                  src= "tmpuser/viz2_2017.html",
-                  width=1200, 
-                  height=800)
-     })
-```
-
-
-### 2018
-
-```{r}
-addResourcePath("tmpuser", getwd())
-
-renderUI({
-      tags$iframe(seamless="seamless", 
-                  src= "tmpuser/viz2_2018.html",
-                  width=1200, 
-                  height=800)
-     })
-```
 
 Teacher:Student Ratio
 ======================
@@ -182,6 +193,13 @@ selectInput("drop3", "Year",
     unique(viz3$Year))
 
 ```
+
+
+Hovering over Lines and Nodes of Sankey Network interaction will provide information of number of students per teacher. Use drop down to check for different years. A few key insights are :
+
+-   The higher income countries have the lowest number of students being taken care of by a single teacher across most years.
+-   **The income level of the country is inversely proportional to the number of students for a teacher.**
+-   The key finding however is the **gap between the upper two levels and the lower two levels of income**. There is a stark contrast in quality of education.
 
 
 Column {.tabset}
