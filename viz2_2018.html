@@ -16,13 +16,19 @@
         .append("svg")
         .attr("width", width)
         .attr("height", height)
+        
+        // Domain and range for each income group
 
     var x = d3.scaleOrdinal()
         .domain(["L", "LM", "UM", "H"])
         .range([50, 200, 340, 550])
+        
+        // color scale for enrollment rate status
 
         var color = d3.scaleOrdinal(["#A09F57", "#852747", "#4A403A"])
         .domain(["Improving", "Worsening", "Stagnant"])
+        
+        // force simulation for grouping of circles
 
     var simulation = d3.forceSimulation()
         .force("forceX", d3.forceX().strength(.1).x( function(d){ return x(d.income) } ))
@@ -55,6 +61,8 @@
                 .attr("cx", function(d){ return d.x; })
                 .attr("cy", function(d){ return d.y; })
           });
+          
+          // fill circles and mouse events
 
       var node = svg.append("g")
           .attr("class", "node")
@@ -74,6 +82,8 @@
               .on("start", dragstarted)
               .on("drag", dragged)
               .on("end", dragended));
+
+              // add text for income group
 
         svg.append("text")
            .attr("x", 250)
@@ -99,6 +109,8 @@
            .style("text-anchor", "middle")
            .text("High");
             })
+
+            // drag event functions
 
     function dragstarted(d) {
       if (!d3.event.active) simulation.alphaTarget(.03).restart();

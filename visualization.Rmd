@@ -11,6 +11,9 @@ always_allow_html: yes
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+# Libraries Used
+
 library(tidyverse)
 library(flexdashboard)
 library(shiny)
@@ -44,6 +47,9 @@ Click through the tabs to explore the data for this through the years 2014-2018.
 
 <div>
 ```{r, fig.width = 10, fig.height = 10}
+
+# Add Picture for intro
+
 knitr::include_graphics("img/teacher.png")
 ```
 </div>
@@ -77,6 +83,9 @@ Inputs {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
+
+# Drop down for Level of education
+
 viz1 <- read_csv("data/viz1.csv")
 selectInput("drop1", "Level of Education", 
     unique(viz1$`Level of education`))
@@ -95,12 +104,14 @@ Column
 -----------------------------------------------------------------------
 
 ```{r}
+# Reactive chunk for 1st drop down
 
 selectedData <- reactive({
   viz1 %>%
     filter(`Level of education`==input$drop1)
 })
 
+# render line plot
 renderPlot({
   viz <- selectedData() %>%
     mutate(comp = paste0(round(staff_comp, 1), "%"))
@@ -111,7 +122,7 @@ renderPlot({
     theme_void()
 })
 
-
+# render pictogram
 
 renderPlot({
   viz1 <- selectedData() %>%
@@ -142,6 +153,7 @@ Inputs {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
+#drop down2 for year
 viz2 <- read_csv("data/viz2.csv")
 selectInput("drop2", "Year", 
     unique(viz2$Year))
@@ -163,13 +175,15 @@ Column {.tabset}
 -------------------------------------
 
 ```{r}
+#add resource path for displaying js script in iframe
 addResourcePath("tmpuser", getwd())
 
+#drop down 2 reactive output
 selectedData3 <- reactive({
   input$drop2
 })
 
-
+#render d3 in iframe
 renderUI({
   source <- paste0("tmpuser/viz2_", selectedData3(),".html")
   tags$iframe(seamless="seamless", 
@@ -188,6 +202,8 @@ Inputs {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
+
+#drop down 3
 viz3 <- read_csv("data/viz3.csv")
 selectInput("drop3", "Year", 
     unique(viz3$Year))
@@ -206,18 +222,22 @@ Column {.tabset}
 -------------------------------------
 
 ```{r}
-
+#reactive data for 3rd drop down output
 selectedData2 <- reactive({
   viz3 %>%
     filter(Year == as.numeric(input$drop3))
 })
 
+#render sankey network
 renderSankeyNetwork({
+  # data wrangling to get nodes df
   Nodes <- data.frame(numbers = c("H", "UM", "LM", "L",
                                   unique(selectedData2()$Country)))
+  #color palette for sankey network
   my_color <- 'd3.scaleOrdinal()
   .domain(["H", "UM","LM", "L"])
   .range(["#D98C00", "#D4ECDD" , "#A7C5EB", "#E9896A"])'
+  # data wrangling to get links df
   links <- selectedData2() %>%
     select(income, Country, student_to_1_teacher) %>%
     mutate(source = recode(income, H = 0, UM = 1, LM = 2, L = 3)) %>%
@@ -225,6 +245,7 @@ renderSankeyNetwork({
     mutate(Country = which(Nodes == Country)-1) %>%
     distinct(Country, .keep_all = TRUE)
   
+  # sankeynetwork d3 viz created
   check <- sankeyNetwork(Links = links, Nodes = Nodes, Source = "source",
               Target = "Country", Value = "student_to_1_teacher",
               NodeID = "numbers", units = " students", fontSize = 15, nodeWidth = 25,
